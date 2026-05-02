@@ -5,14 +5,17 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Canvas - Design System</title>
     
-    <script src="../canvas-visual.aura.build/assets/resource_3fa48481346f.js"></script>
-    <script src="../canvas-visual.aura.build/assets/iconify_654a1ef798a3.js"></script>
-    <script src="../digital-architect.aura.build/assets/iconify-icon_d39ffc6e4c56.js"></script>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="./assets/resource_3fa48481346f.js"></script>
+    <script src="./assets/iconify_654a1ef798a3.js"></script>
+    <script src="./assets/iconify-icon_d39ffc6e4c56.js"></script>
     
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-    <link href="../canvas-visual.aura.build/assets/css2_5dc1420882f5.css" rel="stylesheet"/>
-    <link href="../canvas-visual.aura.build/assets/css2_86e10c4bcbd4.css" id="all-fonts-link-font-geist" rel="stylesheet"/>
+    <link href="./assets/css2_5dc1420882f5.css" rel="stylesheet"/>
+    <link href="./assets/css2_86e10c4bcbd4.css" id="all-fonts-link-font-geist" rel="stylesheet"/>
     
     <!-- Reference Bricolage Grotesque Font -->
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap" rel="stylesheet">
@@ -73,6 +76,7 @@
         body {
             font-family: 'Inter', sans-serif;
             background-color: #050505;
+            color-scheme: dark;
         }
         .grid-bg {
             background-image:
@@ -324,7 +328,7 @@
         }
     </style>
 </head>
-<body class="text-neutral-300 min-h-screen flex flex-col overflow-x-hidden selection:bg-[#F97316] selection:text-black">
+<body class="text-neutral-300 min-h-screen flex flex-col overflow-x-hidden selection:bg-[#F97316] selection:text-black bg-[#050505]">
 
 <!-- Aura Background Component -->
 <div class="aura-background-component top-0 w-full h-screen -z-10 saturate-0 brightness-50 mix-blend-screen absolute" data-alpha-mask="80" style="mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent)">
@@ -348,7 +352,7 @@
             </div>
             <div class="absolute inset-[1px] -z-10 bg-[#050505] transition-colors duration-300 group-hover:bg-[#0A0A0A]"></div>
             <svg aria-hidden="true" class="iconify iconify--solar text-lg w-[18px] h-[18px]" data-icon="solar:file-download-bold-duotone" data-icon-replaced="true" height="1em" role="img" stroke-width="2" style="width: 18px; height: 18px; color: rgb(249, 115, 22)" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path class="" clip-rule="evenodd" d="M10 22h4c3.771 0 5.657 0 6.828-1.172S22 17.771 22 14v-.437c0-.873 0-1.529-.043-2.063h-4.052c-1.097 0-2.067 0-2.848-.105c-.847-.114-1.694-.375-2.385-1.066c-.692-.692-.953-1.539-1.067-2.386c-.105-.781-.105-1.75-.105-2.848l.01-2.834q0-.124.02-.244C11.121 2 10.636 2 10.03 2C6.239 2 4.343 2 3.172 3.172C2 4.343 2 6.229 2 10v4c0 3.771 0 5.657 1.172 6.828S6.229 22 10 22" fill="currentColor" fill-rule="evenodd" opacity=".5"></path><path class="" d="M9.013 19.047a.75.75 0 0 1-1.026 0l-2-1.875a.75.75 0 0 1 1.026-1.094l.737.69V13.5a.75.75 0 0 1-1.5 0v3.269l.737-.691a.75.75 0 0 1 1.026 1.094zM11.51 2.26l-.01 2.835c0 1.097 0 2.066.105 2.848c.114.847.375 1.694 1.067 2.385c.69.691 1.538.953 2.385 1.067c.781.105 1.751.105 2.848.105h4.052q.02.232.028.5H22c0-.268 0-.402-.01-.56a5.3 5.3 0 0 0-.958-2.641c-.094-.128-.158-.204-.285-.357C19.954 7.494 18.91 6.312 18 5.5c-.81-.724-1.921-1.515-2.89-2.161c-.832-.556-1.248-.834-1.819-1.04a6 6 0 0 0-.506-.154c-.384-.095-.758-.128-1.285-.14z" fill="currentColor"></path></svg>
-            08:08
+            <span style="color: white !important;">08:08</span>
         </a>
     </div>
 </nav>
@@ -403,7 +407,7 @@
         <div class="lg:col-span-5 relative h-[500px] lg:h-auto flex items-center justify-end perspective-[1000px] lg:-mr-6 xl:-mr-10 right-0 lg:right-2 xl:right-4 animate-on-scroll [animation:fadeSlideIn_0.8s_ease-out_0.8s_both]">
             <div class="relative z-10 w-[115%] lg:w-[125%] xl:w-[130%] max-w-none">
                 <div class="w-full aspect-video bg-neutral-900 border border-white/10 shadow-2xl floating-card">
-                    <img alt="Tathiana Maia - Café da manhã" class="w-full h-full object-cover object-center opacity-90 soft-gray" src="assets/café_manha.png"/>
+                    <img alt="Tathiana Maia - Café da manhã" class="w-full h-full object-cover object-center opacity-90 soft-gray" src="./assets/café_manha.png"/>
                 </div>
                 <!-- Core Philosophy Card positioned to overlap the bottom right edge -->
                 <div class="absolute -bottom-[100px] right-0 lg:-bottom-[108px] lg:right-0 z-40">
@@ -463,9 +467,9 @@
                     
                     <!-- Shared video/image container for smooth fade -->
                     <div id="video-wrapper" class="video-wrapper absolute inset-0 w-full h-full">
-                        <img class="video-poster" src="assets/POSTER_FUNDO_2.png" alt="Video poster" />
-                        <video id="gift-video" class="video-player" muted loop playsinline>
-                            <source src="assets/PRESENTE.mp4" type="video/mp4">
+                        <img class="video-poster" src="./assets/POSTER_FUNDO_2.png" alt="Video poster" />
+                        <video id="gift-video" class="video-player" min-h-full muted loop playsinline>
+                            <source src="./assets/PRESENTE.mp4" type="video/mp4">
                         </video>
                         <div class="video-transition-overlay"></div>
                     </div>
@@ -499,7 +503,7 @@
             <div class="lg:col-span-6 lg:col-start-1 relative z-10">
                 <div class="relative h-[400px] md:h-[600px] rounded-none overflow-hidden border border-white/10 bg-[#0A0A0A] shadow-2xl transition-all duration-500 group-hover/carousel:scale-[1.01] hover:border-[#F97316]/30">
                     <div class="bg-gradient-to-t from-black/60 via-transparent to-transparent z-10 absolute top-0 right-0 bottom-0 left-0"></div>
-                    <img alt="Member" class="w-full h-full object-cover transition-opacity duration-300 opacity-70 group-hover/carousel:opacity-90 transition-opacity" id="t-image" src="assets/Tê_pè.jpeg"/>
+                    <img alt="Member" class="w-full h-full object-cover transition-opacity duration-300 opacity-70 group-hover/carousel:opacity-90 transition-opacity" id="t-image" src="./assets/Tê_pè.jpeg"/>
                 </div>
             </div>
             <!-- Right Column: Quote/Text Card -->
@@ -537,19 +541,19 @@ ficou lindo em você
                     quote: `<span class="font-normal text-white">Tê...</span>\n\nficou lindo em você\né um jeitinho de deixar meu abraço sempre contigo`,
                     author: "— Sam",
                     role: "",
-                    image: "assets/Tê_pè.jpeg"
+                    image: "./assets/Tê_pè.jpeg"
                 },
                 {
                     quote: `<span class="font-normal text-white">Tê...</span>\n\nhoje eu tô por aqui\nassim\nao seu lado também`,
                     author: "— Sam",
                     role: "",
-                    image: "assets/sentados_lado_aberta.png"
+                    image: "./assets/sentados_lado_aberta.png"
                 },
                 {
                     quote: `<span class="font-normal text-white">Tê...</span>\n\nconforto\nproteção\nbem assim`,
                     author: "— Sam",
                     role: "",
-                    image: "assets/sentados_beijo_aberta.png"
+                    image: "./assets/sentados_beijo_aberta.png"
                 }
             ];
 
@@ -604,11 +608,11 @@ ficou lindo em você
         <!-- Video Container -->
         <div class="relative w-full border border-white/10 bg-[#0A0A0A] aspect-video hover:border-[#F97316]/30 transition-colors duration-500 shadow-2xl">
             <video class="w-full h-full object-cover" style="object-position: center center;" autoplay muted playsinline loop>
-                <source src="assets/Sam_Tê.mp4" type="video/mp4">
+                <source src="./assets/Sam_Tê.mp4" type="video/mp4">
             </video>
             <!-- Overlay Signature Card -->
             <div class="absolute -bottom-8 -right-10 z-30 w-[170px] md:w-[210px] aspect-[16/10] bg-[#0A0A0A]/85 backdrop-blur-sm border border-[#F97316]/30 shadow-2xl overflow-hidden transition-transform duration-500 hover:scale-[1.03] pointer-events-none">
-                <img src="assets/CARTAO_ASSINATURA.png" alt="Assinatura Sam" class="w-full h-full object-cover">
+                <img src="./assets/CARTAO_ASSINATURA.png" alt="Assinatura Sam" class="w-full h-full object-cover">
             </div>
         </div>
         <!-- Phrase Below Video -->
