@@ -55,9 +55,39 @@
             if (!window.__inViewIO) {
                 window.__inViewIO = new IntersectionObserver((entries) => {
                     entries.forEach((entry) => {
+                        let animClass = entry.target.getAttribute("data-anim-class");
+                        if (!animClass) {
+                            animClass = [...entry.target.classList].find(c => c.startsWith("[animation:") || c.includes("animate-entry"));
+                            if (animClass) {
+                                entry.target.setAttribute("data-anim-class", animClass);
+                            }
+                        }
+                        
+                        let animStyle = entry.target.getAttribute("data-anim-style");
+                        if (!animStyle && entry.target.style.animation) {
+                            animStyle = entry.target.style.animation;
+                            entry.target.setAttribute("data-anim-style", animStyle);
+                        }
+
                         if (entry.isIntersecting) {
+                            if (animClass) {
+                                entry.target.classList.remove(animClass);
+                                void entry.target.offsetWidth; // force reflow
+                                entry.target.classList.add(animClass);
+                            }
+                            if (animStyle) {
+                                entry.target.style.animation = "none";
+                                void entry.target.offsetWidth; // force reflow
+                                entry.target.style.animation = animStyle;
+                            }
                             entry.target.classList.add("animate");
                         } else {
+                            if (animClass) {
+                                entry.target.classList.remove(animClass);
+                            }
+                            if (animStyle) {
+                                entry.target.style.animation = "none";
+                            }
                             entry.target.classList.remove("animate");
                         }
                     });
@@ -369,6 +399,27 @@
                 box-shadow: 0 0 16px rgba(249, 115, 22, 0.35) !important;
                 border-color: rgba(249, 115, 22, 0.4) !important;
             }
+
+            /* Task 2 - Reduce Text Card Height on Mobile */
+            .group\/card {
+                padding-top: 1.25rem !important;
+                padding-bottom: 1.25rem !important;
+                padding-left: 1.5rem !important;
+                padding-right: 1.5rem !important;
+            }
+            #t-quote {
+                margin-bottom: 1.25rem !important;
+                line-height: 1.4 !important;
+            }
+            #t-quote + div {
+                margin-top: 1rem !important;
+            }
+
+            /* Task 3 - Preserve Café Card Visibility on Mobile */
+            #cafe-card {
+                bottom: -60px !important;
+                right: 8px !important;
+            }
         }
     </style>
 </head>
@@ -396,7 +447,7 @@
             </div>
             <div class="absolute inset-[1px] -z-10 bg-[#050505] transition-colors duration-300 group-hover:bg-[#0A0A0A]"></div>
             <svg aria-hidden="true" class="iconify iconify--solar text-lg w-[18px] h-[18px]" data-icon="solar:file-download-bold-duotone" data-icon-replaced="true" height="1em" role="img" stroke-width="2" style="width: 18px; height: 18px; color: rgb(249, 115, 22)" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path class="" clip-rule="evenodd" d="M10 22h4c3.771 0 5.657 0 6.828-1.172S22 17.771 22 14v-.437c0-.873 0-1.529-.043-2.063h-4.052c-1.097 0-2.067 0-2.848-.105c-.847-.114-1.694-.375-2.385-1.066c-.692-.692-.953-1.539-1.067-2.386c-.105-.781-.105-1.75-.105-2.848l.01-2.834q0-.124.02-.244C11.121 2 10.636 2 10.03 2C6.239 2 4.343 2 3.172 3.172C2 4.343 2 6.229 2 10v4c0 3.771 0 5.657 1.172 6.828S6.229 22 10 22" fill="currentColor" fill-rule="evenodd" opacity=".5"></path><path class="" d="M9.013 19.047a.75.75 0 0 1-1.026 0l-2-1.875a.75.75 0 0 1 1.026-1.094l.737.69V13.5a.75.75 0 0 1-1.5 0v3.269l.737-.691a.75.75 0 0 1 1.026 1.094zM11.51 2.26l-.01 2.835c0 1.097 0 2.066.105 2.848c.114.847.375 1.694 1.067 2.385c.69.691 1.538.953 2.385 1.067c.781.105 1.751.105 2.848.105h4.052q.02.232.028.5H22c0-.268 0-.402-.01-.56a5.3 5.3 0 0 0-.958-2.641c-.094-.128-.158-.204-.285-.357C19.954 7.494 18.91 6.312 18 5.5c-.81-.724-1.921-1.515-2.89-2.161c-.832-.556-1.248-.834-1.819-1.04a6 6 0 0 0-.506-.154c-.384-.095-.758-.128-1.285-.14z" fill="currentColor"></path></svg>
-            <span style="color: white !important;">👉 TESTE 02</span>
+            <span style="color: white !important;">👉 TESTE 03</span>
         </a>
     </div>
 </nav>
@@ -454,7 +505,7 @@
                     <img alt="Tathiana Maia - Café da manhã" class="w-full h-full object-cover object-center opacity-90 soft-gray" src="./assets/café_manha.png"/>
                 </div>
                 <!-- Core Philosophy Card positioned to overlap the bottom right edge -->
-                <div class="absolute -bottom-[100px] right-0 lg:-bottom-[108px] lg:right-0 z-40">
+                <div id="cafe-card" class="absolute -bottom-[100px] right-0 lg:-bottom-[108px] lg:right-0 z-40">
                     <div class="w-64 bg-[#111] border border-white/10 p-4 shadow-2xl transform hover:-translate-y-[9px] transition-transform duration-300 group cursor-pointer">
                         <div class="flex items-start gap-3">
                             <div class="w-10 h-10 bg-[#F97316] flex items-center justify-center text-black font-bold shrink-0"></div>
@@ -551,7 +602,7 @@
                 </div>
             </div>
             <!-- Right Column: Quote/Text Card -->
-            <div class="lg:col-span-6 lg:col-start-7 relative z-20 lg:-translate-x-28">
+            <div class="lg:col-span-6 lg:col-start-7 relative z-20 lg:-translate-x-28 animate-on-scroll">
                 <div class="overflow-hidden group/card hover:border-[#F97316]/30 transition-all duration-500 hover:scale-[1.01] hover:-translate-y-1 bg-[#0A0A0A]/80 w-full lg:w-[620px] border-white/10 border rounded-none pt-6 pr-8 pb-6 pl-8 md:p-12 relative shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)] backdrop-blur-sm before:absolute before:inset-0 before:bg-[#F97316]/5 before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-500 before:pointer-events-none">
                     <blockquote class="text-2xl md:text-3xl leading-relaxed text-neutral-200 mb-6 md:mb-10 relative z-10 font-bricolage font-light tracking-tight transition-opacity duration-300 whitespace-pre-line" id="t-quote" style="transition: outline 0.1s ease-in-out;"><span class="font-normal text-white">Tê...</span>
 
