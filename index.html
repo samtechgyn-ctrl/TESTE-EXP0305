@@ -290,7 +290,7 @@
 
             #fixed-hud-frame {
                 display: block !important;
-                opacity: 0.75 !important;
+                opacity: 0.85 !important;
                 top: 84px !important;
                 right: 16px !important;
                 left: auto !important;
@@ -321,9 +321,35 @@
                 align-items: flex-end !important;
             }
             #fixed-hud-frame span {
-                font-size: 24px !important;
+                font-size: 28px !important;
                 line-height: 1.1 !important;
                 text-align: right !important;
+                font-weight: 300 !important;
+            }
+
+            /* Reduced spacing on mobile */
+            #hero {
+                padding-top: 4rem !important;
+                min-height: auto !important;
+            }
+            #hero main {
+                margin-top: 2rem !important;
+                margin-bottom: 2rem !important;
+                gap: 2rem !important;
+            }
+            #second-fold {
+                padding-top: 3.5rem !important;
+                padding-bottom: 3.5rem !important;
+                min-height: auto !important;
+            }
+            section.animate-entry {
+                margin-top: 3.5rem !important;
+                margin-bottom: 3.5rem !important;
+            }
+            #fourth-fold {
+                min-height: auto !important;
+                padding-top: 4rem !important;
+                padding-bottom: 4rem !important;
             }
         }
     </style>
@@ -468,7 +494,7 @@
                     <!-- Shared video/image container for smooth fade -->
                     <div id="video-wrapper" class="video-wrapper absolute inset-0 w-full h-full">
                         <img class="video-poster" src="./assets/POSTER_FUNDO_2.png" alt="Video poster" />
-                        <video id="gift-video" class="video-player" min-h-full muted loop playsinline>
+                        <video id="gift-video" class="video-player" muted playsinline>
                             <source src="./assets/PRESENTE.mp4" type="video/mp4">
                         </video>
                         <div class="video-transition-overlay"></div>
@@ -476,7 +502,7 @@
                 </div>
                 <!-- Input Style Button Moved Below Video -->
                 <div class="mt-5 flex items-center justify-start">
-                    <div id="btn-abrir" onclick="const wrapper = document.getElementById('video-wrapper'); const v = document.getElementById('gift-video'); if (wrapper &amp;&amp; v) { wrapper.classList.add('flash'); setTimeout(() => { wrapper.classList.add('active'); v.play(); }, 60); setTimeout(() => { wrapper.classList.remove('flash'); }, 320); } this.style.opacity='0'; this.style.pointerEvents='none';" class="bg-[#0A0A0A] border border-white/10 rounded-full py-3 pl-6 pr-2 flex items-center gap-4 shadow-2xl w-64 group hover:border-[#F97316]/50 transition-colors pointer-events-auto cursor-pointer">
+                    <div id="btn-abrir" onclick="const wrapper = document.getElementById('video-wrapper'); const v = document.getElementById('gift-video'); if (wrapper && v) { wrapper.classList.add('flash'); v.addEventListener('ended', () => { v.pause(); }); setTimeout(() => { wrapper.classList.add('active'); v.play(); }, 60); setTimeout(() => { wrapper.classList.remove('flash'); }, 320); } this.style.opacity='0'; this.style.pointerEvents='none';" class="bg-[#0A0A0A] border border-white/10 rounded-full py-3 pl-6 pr-2 flex items-center gap-4 shadow-2xl w-64 group hover:border-[#F97316]/50 transition-colors pointer-events-auto cursor-pointer">
                         <span class="text-white text-base font-semibold uppercase tracking-[0.18em] select-none flex-grow pl-1">ABRIR</span>
                         <button class="w-8 h-8 bg-white text-black rounded-full flex items-center justify-center group-hover:bg-[#F97316] hover:bg-[#F97316] transition-colors shrink-0">
                             <svg aria-hidden="true" class="iconify text-lg iconify--solar" data-icon="solar:arrow-right-up-bold-duotone" height="1em" role="img" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M17.47 15.53a.75.75 0 0 0 1.28-.53V6a.75.75 0 0 0-.75-.75H9a.75.75 0 0 0-.53 1.28z" fill="currentColor" fill-rule="evenodd"></path><path d="M5.47 17.47a.75.75 0 1 0 1.06 1.06l6.97-6.97l-1.06-1.06z" fill="currentColor" opacity=".5"></path></svg>
