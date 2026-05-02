@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Canvas - Design System</title>
+    
+    <script src="../canvas-visual.aura.build/assets/resource_3fa48481346f.js"></script>
+    <script src="../canvas-visual.aura.build/assets/iconify_654a1ef798a3.js"></script>
+    <script src="../digital-architect.aura.build/assets/iconify-icon_d39ffc6e4c56.js"></script>
+    
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="../canvas-visual.aura.build/assets/css2_5dc1420882f5.css" rel="stylesheet"/>
+    <link href="../canvas-visual.aura.build/assets/css2_86e10c4bcbd4.css" id="all-fonts-link-font-geist" rel="stylesheet"/>
+    
+    <!-- Reference Bricolage Grotesque Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap" rel="stylesheet">
+    <style id="all-fonts-style-font-bricolage">
+        .font-bricolage { font-family: 'Bricolage Grotesque', sans-serif !important; }
+    </style>
+    
+    <style id="all-fonts-style-font-geist">.font-geist { font-family: 'Geist', sans-serif !important; }</style>
+    
+    <style class="">
+        @keyframes fadeSlideIn {
+            0% { opacity: 0; transform: translateY(30px); filter: blur(8px); }
+            100% { opacity: 1; transform: translateY(0); filter: blur(0px); }
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        @keyframes scroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-100%); }
+        }
+        @keyframes simpleFadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    </style>
+    
+    <script>
+        (function () {
+            const style = document.createElement("style");
+            style.textContent = `
+                .animate-on-scroll { animation-play-state: paused !important; }
+                .animate-on-scroll.animate { animation-play-state: running !important; }
+            `;
+            document.head.appendChild(style);
+            const once = true;
+            if (!window.__inViewIO) {
+                window.__inViewIO = new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add("animate");
+                            if (once) window.__inViewIO.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1, rootMargin: "0px 0px -5% 0px" });
+            }
+            window.initInViewAnimations = function (selector = ".animate-on-scroll") {
+                document.querySelectorAll(selector).forEach((el) => {
+                    window.__inViewIO.observe(el);
+                });
+            };
+            document.addEventListener("DOMContentLoaded", () => initInViewAnimations());
+        })();
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050505;
+        }
+        .grid-bg {
+            background-image:
+            linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse at center, black 40%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 70%);
+        }
+        .beam-border-v {
+            position: absolute; top: 0; bottom: 0; left: 0; width: 1px;
+            background: rgba(255,255,255,0.05); overflow: hidden; z-index: 10;
+        }
+        .beam-border-v::after {
+            content: ''; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(to bottom, transparent, #F97316, transparent);
+            transform: translateY(-100%);
+            animation: beam-drop-cycle 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+            opacity: 0.7;
+        }
+        .beam-border-h {
+            position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+            background: rgba(255,255,255,0.05); overflow: hidden; z-index: 10;
+        }
+        .beam-border-h::after {
+            content: ''; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(to right, transparent, #F97316, transparent);
+            transform: translateX(-100%);
+            animation: beam-slide-top-cycle 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+            opacity: 0.7;
+        }
+        @keyframes text-flash-1 {
+            0%, 8%, 24%, 100% { color: #525252; text-shadow: none; }
+            12% { color: #F97316; text-shadow: 0 0 15px rgba(249,115,22,0.8); }
+        }
+        @keyframes text-flash-2 {
+            0%, 8%, 24%, 100% { color: #525252; text-shadow: none; }
+            16% { color: #F97316; text-shadow: 0 0 15px rgba(249,115,22,0.8); }
+        }
+        @keyframes text-flash-3 {
+            0%, 8%, 24%, 100% { color: #525252; text-shadow: none; }
+            20% { color: #F97316; text-shadow: 0 0 15px rgba(249,115,22,0.8); }
+        }
+        @keyframes beam-drop {
+            0% { transform: translateY(-100%); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(100%); opacity: 0; }
+        }
+
+        @keyframes beam-slide-top-cycle {
+            0% { transform: translateX(-100%); opacity: 0; }
+            2% { opacity: 1; }
+            16% { opacity: 1; }
+            18% { transform: translateX(100%); opacity: 0; }
+            100% { transform: translateX(100%); opacity: 0; }
+        }
+        @keyframes beam-drop-cycle {
+            0%, 5% { transform: translateY(-100%); opacity: 0; }
+            8% { opacity: 1; }
+            21% { opacity: 1; }
+            24% { transform: translateY(100%); opacity: 0; }
+            100% { transform: translateY(100%); opacity: 0; }
+        }
+        @keyframes beam-slide-bottom-cycle {
+            0%, 4% { transform: translateX(100%); opacity: 0; }
+            7% { opacity: 1; }
+            42% { opacity: 1; }
+            45% { transform: translateX(-100%); opacity: 0; }
+            100% { transform: translateX(-100%); opacity: 0; }
+        }
+        @keyframes beam-slide {
+            0% { transform: translateX(-100%); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateX(100%); opacity: 0; }
+        }
+        .floating-card {
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), z-index 0s;
+            will-change: transform;
+        }
+        .floating-card:hover {
+            transform: scale(1.05) translateY(-10px) !important;
+            z-index: 50;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border-color: rgba(249, 115, 22, 0.3);
+        }
+        .soft-gray { filter: grayscale(65%); transition: filter 0.5s ease; }
+        .floating-card:hover .soft-gray { filter: grayscale(0%); }
+        .btn-wrapper:hover .btn {
+            background-color: #F97316;
+            color: #000;
+            border-color: #F97316;
+        }
+        .btn {
+            transition: all 0.3s ease;
+        }
+        .marquee-container { display: flex; overflow: hidden; user-select: none; }
+        .marquee-content { flex-shrink: 0; display: flex; justify-content: space-around; min-width: 100%; animation: scroll 40s linear infinite; }
+
+        /* Video card and smooth cinematic transition styles */
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        .video-poster,
+        .video-player {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .video-poster {
+            opacity: 1;
+        }
+        .video-player {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .video-wrapper.active .video-poster {
+            opacity: 0;
+            transition: opacity 0.08s linear;
+        }
+        .video-wrapper.active .video-player {
+            opacity: 1;
+            pointer-events: auto;
+            transition: opacity 0.08s linear;
+        }
+        .video-transition-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 80;
+            background: none;
+        }
+
+        @keyframes quickFlashReveal {
+            0% { opacity: 0; }
+            10% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        @media (min-width: 1024px) {
+            .video-card {
+                transform: translateX(-40px);
+            }
+        }
+
+        /* Testimonial Section Integration Styles from Reference */
+        @keyframes fadeInUpBlur {
+            0% { opacity: 0; transform: translateY(20px); filter: blur(10px); }
+            100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+        .animate-entry {
+            animation: fadeInUpBlur 1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        }
+        .delay-75{animation-delay:75ms}.delay-100{animation-delay:100ms}.delay-150{animation-delay:150ms}.delay-200{animation-delay:200ms}.delay-300{animation-delay:300ms}.delay-500{animation-delay:500ms}.delay-700{animation-delay:700ms}
+
+        @keyframes animationIn {
+            0% { opacity: 0; transform: translateY(30px); filter: blur(8px); }
+            100% { opacity: 1; transform: translateY(0); filter: blur(0px); }
+        }
+
+        [style*="--border-gradient"]::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            padding: 1px;
+            border-radius: var(--border-radius-before, inherit);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            background: var(--border-gradient);
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="text-neutral-300 min-h-screen flex flex-col overflow-x-hidden selection:bg-[#F97316] selection:text-black">
+
+<!-- Aura Background Component -->
+<div class="aura-background-component top-0 w-full h-screen -z-10 saturate-0 brightness-50 mix-blend-screen absolute" data-alpha-mask="80" style="mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent)">
+    <div class="aura-background-component top-0 w-full -z-10 absolute h-full">
+        <div class="absolute w-full h-full left-0 top-0 -z-10" data-us-project="fbC2LfIKPWAtosLcp0kG"></div>
+        <script type="text/javascript">
+            !function(){if(!window.UnicornStudio){window.UnicornStudio={isInitialized:!1};var i=document.createElement("script");i.src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.29/dist/unicornStudio.umd.js",i.onload=function(){window.UnicornStudio.isInitialized||(UnicornStudio.init(),window.UnicornStudio.isInitialized=!0)},(document.head || document.body).appendChild(i)}}();
+        </script>
+    </div>
+</div>
+
+<!-- Documentation Navigation -->
+<nav class="fixed top-0 left-0 w-full z-[100] bg-black/80 backdrop-blur-md border-b border-white/10 px-6 py-4 flex justify-end items-center text-xs font-mono uppercase tracking-widest text-neutral-500 animate-on-scroll [animation:fadeSlideIn_0.8s_ease-out_0s_both]">
+    <div class="beam-border-h"></div>
+    <div class="flex items-center gap-6">
+        <a class="group relative isolate inline-flex items-center justify-center gap-2 overflow-hidden rounded-none bg-transparent pt-2.5 pr-5 pb-2.5 pl-5 text-sm font-semibold text-white transition-all duration-300 hover:shadow-[0_0_30px_-5px_rgba(249,115,22,0.3)]" href="#" style="--spread: 90deg; --shimmer-color: #F97316; --speed: 3s; --cut: 1px;">
+            <div class="absolute inset-0 -z-20 overflow-hidden">
+                <div class="absolute inset-[-100%] w-[300%] h-[300%] animate-[spin_3s_linear_infinite]">
+                    <div class="absolute inset-0" style="background: conic-gradient(from conic-gradient(from calc(270deg - (var(--spread) * 0.5)), transparent 0, var(--shimmer-color) var(--spread), transparent var(--spread)));"></div>
+                </div>
+            </div>
+            <div class="absolute inset-[1px] -z-10 bg-[#050505] transition-colors duration-300 group-hover:bg-[#0A0A0A]"></div>
+            <svg aria-hidden="true" class="iconify iconify--solar text-lg w-[18px] h-[18px]" data-icon="solar:file-download-bold-duotone" data-icon-replaced="true" height="1em" role="img" stroke-width="2" style="width: 18px; height: 18px; color: rgb(249, 115, 22)" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path class="" clip-rule="evenodd" d="M10 22h4c3.771 0 5.657 0 6.828-1.172S22 17.771 22 14v-.437c0-.873 0-1.529-.043-2.063h-4.052c-1.097 0-2.067 0-2.848-.105c-.847-.114-1.694-.375-2.385-1.066c-.692-.692-.953-1.539-1.067-2.386c-.105-.781-.105-1.75-.105-2.848l.01-2.834q0-.124.02-.244C11.121 2 10.636 2 10.03 2C6.239 2 4.343 2 3.172 3.172C2 4.343 2 6.229 2 10v4c0 3.771 0 5.657 1.172 6.828S6.229 22 10 22" fill="currentColor" fill-rule="evenodd" opacity=".5"></path><path class="" d="M9.013 19.047a.75.75 0 0 1-1.026 0l-2-1.875a.75.75 0 0 1 1.026-1.094l.737.69V13.5a.75.75 0 0 1-1.5 0v3.269l.737-.691a.75.75 0 0 1 1.026 1.094zM11.51 2.26l-.01 2.835c0 1.097 0 2.066.105 2.848c.114.847.375 1.694 1.067 2.385c.69.691 1.538.953 2.385 1.067c.781.105 1.751.105 2.848.105h4.052q.02.232.028.5H22c0-.268 0-.402-.01-.56a5.3 5.3 0 0 0-.958-2.641c-.094-.128-.158-.204-.285-.357C19.954 7.494 18.91 6.312 18 5.5c-.81-.724-1.921-1.515-2.89-2.161c-.832-.556-1.248-.834-1.819-1.04a6 6 0 0 0-.506-.154c-.384-.095-.758-.128-1.285-.14z" fill="currentColor"></path></svg>
+            08:08
+        </a>
+    </div>
+</nav>
+
+<!-- BOTTOM STRUCTURAL BAR -->
+<footer class="fixed bottom-12 left-0 w-full z-[100] h-12 bg-transparent border-none pointer-events-none flex justify-center">
+    <div class="relative w-full max-w-[90rem] mx-auto px-6 lg:px-12 h-full">
+        <div class="absolute top-[-1px] left-0 right-0 h-[1px] overflow-hidden pointer-events-none">
+            <div class="absolute inset-0" style="background: linear-gradient(to left, transparent, #F97316, transparent); transform: translateX(100%); animation: beam-slide-bottom-cycle 2s cubic-bezier(0.4, 0, 0.2, 1) infinite; opacity: 0.7;"></div>
+        </div>
+    </div>
+</footer>
+
+<!-- RIGHT FIXED HUD FRAME -->
+<aside class="fixed top-0 left-0 right-0 bottom-0 z-[90] hidden lg:grid grid-cols-1 lg:grid-cols-12 px-6 lg:px-12 gap-12 pointer-events-none">
+    <div class="col-span-10"></div>
+    <div class="col-span-2 relative pointer-events-auto h-full flex flex-col justify-center">
+        <div class="hidden lg:block beam-border-v" style="left: -1px; top: 176px; bottom: 176px;"></div>
+        <div class="flex flex-col justify-center gap-12 pl-8">
+            <div class="group cursor-pointer">
+                <span class="block text-5xl font-light tracking-tighter text-neutral-600 group-hover:text-[#F97316] transition-colors duration-300" style="animation: text-flash-1 2s infinite;">03</span>
+            </div>
+            <div class="group cursor-pointer">
+                <span class="block text-5xl font-light tracking-tighter text-neutral-600 group-hover:text-[#F97316] transition-colors duration-300" style="animation: text-flash-2 infinite 2s;">MAIO</span>
+            </div>
+            <div class="group cursor-pointer">
+                <span class="block text-5xl font-light tracking-tighter text-neutral-600 group-hover:text-[#F97316] transition-colors duration-300" style="animation: text-flash-2 infinite 2s;">2026</span>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<!-- Section 0: Hero -->
+<section id="hero" class="pt-24 min-h-[90vh] flex flex-col">
+    <main class="flex-grow grid grid-cols-1 lg:grid-cols-12 px-6 lg:px-12 my-12 lg:my-20 gap-12 relative">
+        <div class="absolute inset-0 grid-bg pointer-events-none z-0"></div>
+        
+        <!-- Left Column: Text -->
+        <div class="lg:col-span-5 flex flex-col justify-center z-20 relative pt-10 lg:pt-0">
+            <h1 class="lg:text-[7.5rem] leading-[0.9] uppercase text-6xl font-medium text-white tracking-tighter mb-8 animate-on-scroll [animation:fadeSlideIn_0.8s_ease-out_0.2s_both]">
+                <span class="block">Tathiana</span>
+                <span class="block"><span class="text-neutral-600">Ma</span>ia</span>
+            </h1>
+            <p class="text-lg text-neutral-400 max-w-md leading-relaxed mb-12 font-light animate-on-scroll [animation:fadeSlideIn_0.8s_ease-out_0.4s_both]">
+                <span class="block">o dia começou…</span>
+                <span class="block">e mesmo de longe,</span>
+                <span class="block">um dia preparado para estar ao seu lado.</span>
+            </p>
+        </div>
+        
+        <!-- Center Column: Floating Cards -->
+        <div class="lg:col-span-5 relative h-[500px] lg:h-auto flex items-center justify-end perspective-[1000px] lg:-mr-6 xl:-mr-10 right-0 lg:right-2 xl:right-4 animate-on-scroll [animation:fadeSlideIn_0.8s_ease-out_0.8s_both]">
+            <div class="relative z-10 w-[115%] lg:w-[125%] xl:w-[130%] max-w-none">
+                <div class="w-full aspect-video bg-neutral-900 border border-white/10 shadow-2xl floating-card">
+                    <img alt="Tathiana Maia - Café da manhã" class="w-full h-full object-cover object-center opacity-90 soft-gray" src="assets/café_manha.png"/>
+                </div>
+                <!-- Core Philosophy Card positioned to overlap the bottom right edge -->
+                <div class="absolute -bottom-[100px] right-0 lg:-bottom-[108px] lg:right-0 z-40">
+                    <div class="w-64 bg-[#111] border border-white/10 p-4 shadow-2xl transform hover:-translate-y-[9px] transition-transform duration-300 group cursor-pointer">
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 bg-[#F97316] flex items-center justify-center text-black font-bold shrink-0"></div>
+                            <div>
+                                <p class="text-white font-medium text-sm leading-tight group-hover:text-[#F97316] transition-colors">Café da manhã</p>
+                                <p class="text-neutral-500 text-xs mt-1">do seu jeito</p>
+                                <p class="text-neutral-500 text-xs">do jeito que você gosta</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</section>
+
+<!-- Section 0.5: Second Fold -->
+<section id="second-fold" class="py-24 lg:py-32 min-h-[80vh] flex flex-col relative z-20 bg-[#050505]">
+    <main class="flex-grow grid grid-cols-1 lg:grid-cols-12 px-6 lg:px-12 gap-12 max-w-[90rem] mx-auto w-full items-center" style="min-height: 100%;">
+        <!-- Left Column -->
+        <div class="lg:col-span-5 flex flex-col justify-center z-20 relative" style="will-change: transform;">
+            <h2 class="text-5xl leading-[1.1] text-white font-normal tracking-tight mb-8 animate-on-scroll [animation:fadeSlideIn_0.8s_ease-out_0.2s_both]">
+                <span class="block">eu queria te dar algo…</span>
+                <span class="block text-neutral-600 mt-2">que fosse mais do que só um objeto</span>
+            </h2>
+            <p class="text-neutral-400 max-w-md leading-relaxed font-light animate-on-scroll [animation:fadeSlideIn_0.8s_ease-out_0.4s_both]">
+                <span class="block text-4xl mb-6">
+                    não é só um presente,<br>
+                    é um jeito de você me levar com você
+                </span>
+                <span class="block text-3xl">
+                    un jeito de estar sempre por perto
+                </span>
+            </p>
+        </div>
+
+        <!-- Right Column (Card) -->
+        <div class="lg:col-span-7 flex justify-start animate-on-scroll [animation:fadeSlideIn_0.8s_ease-out_0.6s_both]">
+            <div class="w-full lg:w-[90%] xl:w-[85%] group video-card">
+                <div class="aspect-[4/3] bg-[#050505] border border-white/10 relative overflow-hidden mb-4 transition-colors group-hover:border-[#F97316]/30">
+                    <!-- Abstract Interface UI -->
+                    <div class="absolute inset-4 border border-white/5 flex flex-col justify-between p-4 z-20 pointer-events-none">
+                        <div class="flex justify-between items-center">
+                            <div class="w-2 h-2 bg-[#F97316] rounded-full"></div>
+                            <div class="text-[10px] font-mono text-neutral-600">SYS.01</div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="h-1 w-full bg-white/10">
+                                <div class="h-full w-3/4 bg-white/20"></div>
+                            </div>
+                            <div class="h-1 w-2/3 bg-white/10"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Shared video/image container for smooth fade -->
+                    <div id="video-wrapper" class="video-wrapper absolute inset-0 w-full h-full">
+                        <img class="video-poster" src="assets/POSTER_FUNDO_2.png" alt="Video poster" />
+                        <video id="gift-video" class="video-player" muted loop playsinline>
+                            <source src="assets/PRESENTE.mp4" type="video/mp4">
+                        </video>
+                        <div class="video-transition-overlay"></div>
+                    </div>
+                </div>
+                <!-- Input Style Button Moved Below Video -->
+                <div class="mt-5 flex items-center justify-start">
+                    <div id="btn-abrir" onclick="const wrapper = document.getElementById('video-wrapper'); const v = document.getElementById('gift-video'); if (wrapper &amp;&amp; v) { wrapper.classList.add('flash'); setTimeout(() => { wrapper.classList.add('active'); v.play(); }, 60); setTimeout(() => { wrapper.classList.remove('flash'); }, 320); } this.style.opacity='0'; this.style.pointerEvents='none';" class="bg-[#0A0A0A] border border-white/10 rounded-full py-3 pl-6 pr-2 flex items-center gap-4 shadow-2xl w-64 group hover:border-[#F97316]/50 transition-colors pointer-events-auto cursor-pointer">
+                        <span class="text-white text-base font-semibold uppercase tracking-[0.18em] select-none flex-grow pl-1">ABRIR</span>
+                        <button class="w-8 h-8 bg-white text-black rounded-full flex items-center justify-center group-hover:bg-[#F97316] hover:bg-[#F97316] transition-colors shrink-0">
+                            <svg aria-hidden="true" class="iconify text-lg iconify--solar" data-icon="solar:arrow-right-up-bold-duotone" height="1em" role="img" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M17.47 15.53a.75.75 0 0 0 1.28-.53V6a.75.75 0 0 0-.75-.75H9a.75.75 0 0 0-.53 1.28z" fill="currentColor" fill-rule="evenodd"></path><path d="M5.47 17.47a.75.75 0 1 0 1.06 1.06l6.97-6.97l-1.06-1.06z" fill="currentColor" opacity=".5"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</section>
+
+<!-- NEW THIRD FOLD: Functional Testimonials From Reference -->
+<section class="animate-entry delay-200 [animation:animationIn_0.8s_ease-out_0.1s_both] animate-on-scroll max-w-7xl mt-24 mr-auto mb-24 ml-auto relative mx-2.5 lg:mx-auto z-20">
+    <!-- Main Grid -->
+    <div class="flex gap-4 md:gap-8 relative gap-x-4 gap-y-4 items-center justify-between lg:-translate-x-14">
+        <button class="hidden md:flex w-12 h-12 rounded-lg border border-[#F97316] bg-[#F97316] text-black items-center justify-center hover:bg-orange-400 hover:border-orange-400 hover:text-black transition-all duration-300 z-30 group shrink-0 shadow-lg cursor-pointer" onclick="window.prevTestimonial()">
+            <svg class="lucide lucide-arrow-left group-hover:-translate-x-0.5 transition-transform" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg">
+                <path d="m12 19-7-7 7-7"></path>
+                <path d="M19 12H5"></path>
+            </svg>
+        </button>
+        <div class="relative w-full max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 items-center gap-8 group/carousel">
+            <!-- Left Column: Image/Photo Card -->
+            <div class="lg:col-span-6 lg:col-start-1 relative z-10">
+                <div class="relative h-[400px] md:h-[600px] rounded-none overflow-hidden border border-white/10 bg-[#0A0A0A] shadow-2xl transition-all duration-500 group-hover/carousel:scale-[1.01] hover:border-[#F97316]/30">
+                    <div class="bg-gradient-to-t from-black/60 via-transparent to-transparent z-10 absolute top-0 right-0 bottom-0 left-0"></div>
+                    <img alt="Member" class="w-full h-full object-cover transition-opacity duration-300 opacity-70 group-hover/carousel:opacity-90 transition-opacity" id="t-image" src="assets/Tê_pè.jpeg"/>
+                </div>
+            </div>
+            <!-- Right Column: Quote/Text Card -->
+            <div class="lg:col-span-6 lg:col-start-7 relative z-20 lg:-translate-x-28">
+                <div class="overflow-hidden group/card hover:border-[#F97316]/30 transition-all duration-500 hover:scale-[1.01] hover:-translate-y-1 md:p-12 bg-[#0A0A0A]/80 w-full lg:w-[620px] border-white/10 border rounded-none pt-8 pr-8 pb-8 pl-8 relative shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)] backdrop-blur-sm before:absolute before:inset-0 before:bg-[#F97316]/5 before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-500 before:pointer-events-none">
+                    <blockquote class="text-2xl md:text-3xl leading-relaxed text-neutral-200 mb-10 relative z-10 font-bricolage font-light tracking-tight transition-opacity duration-300 whitespace-pre-line" id="t-quote" style="transition: outline 0.1s ease-in-out;"><span class="font-normal text-white">Tê...</span>
+
+ficou lindo em você
+é um jeitinho de deixar meu abraço sempre contigo</blockquote>
+                    <div class="flex items-center justify-end text-right relative z-10 mt-6 w-full">
+                        <div class="flex flex-col items-end">
+                            <span class="text-white/85 text-xl font-sans font-medium tracking-[0.02em] transition-opacity duration-300" id="t-author" style="">
+                                — Sam
+                            </span>
+                            <span class="text-neutral-500 text-xs uppercase flex items-center gap-2 mt-1 font-sans transition-opacity duration-300 hidden" id="t-role" style=""></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Shift right arrow left using desktop-only translation wrapper -->
+        <div class="lg:-translate-x-14 shrink-0">
+            <button class="hidden md:flex w-12 h-12 rounded-lg border border-[#F97316] bg-[#F97316] text-black items-center justify-center hover:bg-orange-400 hover:border-orange-400 hover:text-black transition-all duration-300 z-30 group shadow-lg cursor-pointer" onclick="window.nextTestimonial()">
+                <svg class="lucide lucide-arrow-right group-hover:translate-x-0.5 transition-transform" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 12h14"></path>
+                    <path d="m12 5 7 7-7 7"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+    <script>
+        (function() {
+            const testimonials = [
+                {
+                    quote: `<span class="font-normal text-white">Tê...</span>\n\nficou lindo em você\né um jeitinho de deixar meu abraço sempre contigo`,
+                    author: "— Sam",
+                    role: "",
+                    image: "assets/Tê_pè.jpeg"
+                },
+                {
+                    quote: `<span class="font-normal text-white">Tê...</span>\n\nhoje eu tô por aqui\nassim\nao seu lado também`,
+                    author: "— Sam",
+                    role: "",
+                    image: "assets/sentados_lado_aberta.png"
+                },
+                {
+                    quote: `<span class="font-normal text-white">Tê...</span>\n\nconforto\nproteção\nbem assim`,
+                    author: "— Sam",
+                    role: "",
+                    image: "assets/sentados_beijo_aberta.png"
+                }
+            ];
+
+            let currentIndex = 0;
+
+            window.nextTestimonial = function() {
+                currentIndex = (currentIndex + 1) % testimonials.length;
+                updateTestimonial();
+            };
+
+            window.prevTestimonial = function() {
+                currentIndex = (currentIndex - 1 + testimonials.length) % testimonials.length;
+                updateTestimonial();
+            };
+
+            function updateTestimonial() {
+                const data = testimonials[currentIndex];
+                const quoteEl = document.getElementById('t-quote');
+                const authorEl = document.getElementById('t-author');
+                const roleEl = document.getElementById('t-role');
+                const imageEl = document.getElementById('t-image');
+
+                // Fade out
+                [quoteEl, authorEl, roleEl, imageEl].forEach(el => el.style.opacity = '0');
+
+                setTimeout(() => {
+                    // Update content
+                    quoteEl.innerHTML = data.quote;
+                    authorEl.innerText = data.author;
+                    // Reset role with flag element
+                    if (data.role) {
+                        roleEl.innerHTML = `${data.role} <span class="inline-block w-4 h-3 rounded-[1px] bg-gradient-to-r from-blue-600 via-white to-red-600 shadow-sm opacity-80"></span>`;
+                        roleEl.classList.remove('hidden');
+                    } else {
+                        roleEl.innerHTML = '';
+                        roleEl.classList.add('hidden');
+                    }
+                    imageEl.src = data.image;
+
+                    // Fade in
+                    [quoteEl, authorEl, roleEl, imageEl].forEach(el => el.style.opacity = '1');
+                }, 300);
+            }
+        })();
+    </script>
+</section>
+
+<!-- NEW FOURTH FOLD: Final Emotional Closing -->
+<section id="fourth-fold" class="relative w-full min-h-screen flex items-center justify-center bg-[#050505] overflow-hidden px-6 lg:px-12">
+    <div class="absolute inset-0 grid-bg pointer-events-none z-0 opacity-40"></div>
+    <div class="relative w-full max-w-5xl flex flex-col items-center z-10">
+        <!-- Video Container -->
+        <div class="relative w-full border border-white/10 bg-[#0A0A0A] aspect-video hover:border-[#F97316]/30 transition-colors duration-500 shadow-2xl">
+            <video class="w-full h-full object-cover" style="object-position: center center;" autoplay muted playsinline loop>
+                <source src="assets/Sam_Tê.mp4" type="video/mp4">
+            </video>
+            <!-- Overlay Signature Card -->
+            <div class="absolute -bottom-8 -right-10 z-30 w-[170px] md:w-[210px] aspect-[16/10] bg-[#0A0A0A]/85 backdrop-blur-sm border border-[#F97316]/30 shadow-2xl overflow-hidden transition-transform duration-500 hover:scale-[1.03] pointer-events-none">
+                <img src="assets/CARTAO_ASSINATURA.png" alt="Assinatura Sam" class="w-full h-full object-cover">
+            </div>
+        </div>
+        <!-- Phrase Below Video -->
+        <div class="w-full text-center mt-10 animate-on-scroll" style="animation: simpleFadeIn 1.5s ease-in-out 2s both;">
+            <p class="text-6xl md:text-7xl font-normal tracking-[-0.02em] text-center bg-gradient-to-r from-white via-white to-gray-400 bg-clip-text text-transparent lowercase leading-relaxed drop-shadow-[0_0_10px_rgba(255,255,255,0.05)]">
+                foi bom estar ali com você no café da manhã
+            </p>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>
